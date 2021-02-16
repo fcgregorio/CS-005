@@ -1,5 +1,5 @@
 from nltk.corpus import words as nltk_words
-from wtforms import Form, StringField, TextAreaField, PasswordField, validators, ValidationError
+from wtforms import Form, StringField, TextAreaField, PasswordField, validators, ValidationError, HiddenField
 
 
 def check_has_upper_lower_number_special(form, field):
@@ -73,6 +73,26 @@ class LoginForm(Form):
         validators.DataRequired(),
     ])
     password = PasswordField('Password', [
+        validators.DataRequired(),
+    ])
+
+
+class PasswordChangeForm(Form):
+    first_name = HiddenField()
+    last_name = HiddenField()
+    username = HiddenField()
+    password = PasswordField('Password', [
+        validators.DataRequired(),
+    ])
+    new_password = PasswordField('New Password', [
+        validators.DataRequired(),
+        validators.Length(min=10),
+        check_has_upper_lower_number_special,
+        check_does_not_contain_username_first_name_last_name,
+        check_has_no_dictionary_words_greater_than_4_characters,
+        validators.EqualTo('new_confirm_password', message='New Passwords must match'),
+    ])
+    new_confirm_password = PasswordField('Repeat New Password', [
         validators.DataRequired(),
     ])
 
