@@ -64,35 +64,35 @@ def login():
     if request.method == 'GET':
         username = request.args.get('username')
         form = LoginForm(username=username)        
-    else:
+    elif request.method == 'POST':
         form = LoginForm(request.form)
 
-    if request.method == 'POST' and form.validate():
-        user = User.query.filter_by(username=form.username.data).first()
-        
-        if user and \
-           len(user.login_attempt_history) >= 3 and \
-           user.login_attempt_history[0] + timedelta(minutes=5) > datetime.now():
-            flash('Too many login attempts. Try again later.', 'danger')
-        elif user and \
-             user.verify_password(form.password.data):
-            user.login_attempt_history = []
-            db.session.commit()
+        if form.validate():
+            user = User.query.filter_by(username=form.username.data).first()
+            
+            if user and \
+               len(user.login_attempt_history) >= 3 and \
+               user.login_attempt_history[0] + timedelta(minutes=5) > datetime.now():
+                flash('Too many login attempts. Try again later.', 'danger')
+            elif user and \
+                 user.verify_password(form.password.data):
+                user.login_attempt_history = []
+                db.session.commit()
 
-            login_user(user, remember=True)
+                login_user(user, remember=True)
 
-            return redirect(url_for('index'))
-        elif user:
-            login_attempt_history = copy.deepcopy(user.login_attempt_history)
-            login_attempt_history.insert(0, datetime.now())
-            user.login_attempt_history = login_attempt_history[:4]
-            db.session.commit()
+                return redirect(url_for('index'))
+            elif user:
+                login_attempt_history = copy.deepcopy(user.login_attempt_history)
+                login_attempt_history.insert(0, datetime.now())
+                user.login_attempt_history = login_attempt_history[:4]
+                db.session.commit()
 
-            flash('Invalid credentials.', 'danger')
+                flash('Invalid credentials.', 'danger')
+            else:
+                flash('Invalid credentials.', 'danger')
         else:
             flash('Invalid credentials.', 'danger')
-    else:
-        flash('Invalid credentials.', 'danger')
 
     return render_template('login.html', form=form)
 
