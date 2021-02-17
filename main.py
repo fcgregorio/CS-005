@@ -110,7 +110,7 @@ def password_change():
 
             if any(check_password_hash(password, form.new_password.data) for password in current_user.password_history) or \
                check_password_hash(current_user.password, form.new_password.data):
-                flash('Password must not be the same with any of the 6 previous passwords.', 'danger')
+                form.new_password.errors.append('Password must not be the same with any of the 6 previous passwords.')
             else:
                 password_history = copy.deepcopy(current_user.password_history)
                 password_history.insert(0, current_user.password)
