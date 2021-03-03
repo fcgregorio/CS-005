@@ -14,17 +14,24 @@
             <div class="container-md">
                 <a class="navbar-brand" href="/">Libre</a>
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">{{ current_user.username }}</a>
+                    {% if current_user.is_authenticated %}
+                        <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">{{ current_user.username }}</a>
+                        <a class="nav-link" href="{{ url_for('password_change') }}">Change Password</a>
+                    {% else %}
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                    {% endif %}
                 </div>
-                <form method='POST' action="{{ url_for('logout') }}" class="d-flex">
-                    <button class="btn btn-light" type="submit">Logout</button>
-                </form>
+                {% if current_user.is_authenticated %}
+                    <form method='POST' action="{{ url_for('logout') }}" class="d-flex">
+                        <button class="btn btn-light" type="submit">Logout</button>
+                    </form>
+                {% endif %}
             </div>
         </nav>
 
         <div class="container">
             <div class="row">
-
                 {% if current_user.is_password_expired() %}
                     <div class="alert alert-danger mt-5" role="alert">
                         Your password has expired.
@@ -35,52 +42,47 @@
                     </div>
                 {% endif %}
 
-
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert alert-{{ category }} mt-5" role="alert">
-                                <li>{{ message }}</li>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-
                 <div class="mt-5 col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
                     <form method="post">
-                        <div class="mb-3">
-                            {{ form.password.label(class="form-label") }}
-                            {{ form.password(class="form-control") }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form.new_password.label(class="form-label") }}
+                        
+                        {% macro field(field) -%}
+                            {{ field.label(class="form-label") }}
                             {% set class = "form-control" %}
-                            {% if request.method == 'POST' and form.new_password.errors %}
+                            {% if request.method == 'POST' and field.errors %}
                                 {% set class = class + " is-invalid" %}
                             {% elif request.method == 'POST' %}
                                 {% set class = class + " is-valid" %}
                             {% endif %}
-                            {{ form.new_password(class=class) }}
-                            {% if form.new_password.errors %}
+                            {{ field(class=class) }}
+                            {% if field.errors %}
                                 <div class="invalid-feedback">
                                     <ul>
-                                        {% for error in form.new_password.errors %}
+                                        {% for error in field.errors %}
                                             <li>{{ error }}</li>
                                         {% endfor %}
                                     </ul>
                                 </div>
                             {% endif %}
+                        {%- endmacro %}
+
+                        <div class="mb-3">
+                            {{ field(form.first_name) }}
                         </div>
                         <div class="mb-3">
-                            {{ form.new_confirm_password.label(class="form-label") }}
-                            {{ form.new_confirm_password(class="form-control") }}
+                            {{ field(form.last_name) }}
                         </div>
-                        <button type="submit" class="btn btn-primary">Login</button>
+                        <div class="mb-3">
+                            {{ field(form.username) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ field(form.email) }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                 </div>
             </div>
         </div>
-
+        
         <!-- Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     </body>

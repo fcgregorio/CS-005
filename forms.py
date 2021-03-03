@@ -97,6 +97,25 @@ class PasswordChangeForm(Form):
     ])
 
 
+class UpdateUserForm(Form):
+    first_name = StringField('First Name', [
+        validators.DataRequired(),
+        validators.Length(max=50),
+    ])
+    last_name = StringField('Last Name', [
+        validators.DataRequired(),
+        validators.Length(max=50),
+    ])
+    username = StringField('Username', [
+        validators.DataRequired(),
+        validators.Length(max=25),
+    ])
+    email = StringField('Email Address', [
+        validators.DataRequired(),
+        validators.Email()
+    ])
+
+
 class MessageForm(Form):
     content = TextAreaField('Content', [
         validators.DataRequired(),
