@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from forms import LoginForm, MessageForm, RegistrationForm, PasswordChangeForm, UpdateUserForm, FollowUnfollowForm
 from flask_sqlalchemy import SQLAlchemy
-from models import db, User, Message
+from models import db, User, Message, Follow
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from datetime import datetime, timedelta
 import copy
