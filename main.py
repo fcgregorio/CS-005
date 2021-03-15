@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, abort, status
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from forms import LoginForm, MessageForm, RegistrationForm, PasswordChangeForm, UpdateUserForm, FollowUnfollowForm
 from flask_sqlalchemy import SQLAlchemy
 from models import db, User, Message
@@ -228,7 +228,7 @@ def follow():
 
         follow = Follow(subject_user_id=current_user.id, object_user_id=user.id)
         db.session.commit()
-        return None, status.HTTP_201_CREATED
+        return None, 201
 
 
 @app.route('/unfollow', methods=['POST'])
@@ -243,7 +243,7 @@ def unfollow():
         
         db.session.delete(follow)
         db.session.commit()
-        return None, status.HTTP_200_OK
+        return None, 200
 
 
 @app.route('/followers', methods=['GET'])
@@ -251,7 +251,7 @@ def unfollow():
 def followers():
     followers = Follow.query.filter_by(object_user_id=current_user.id).all()
 
-    return followers, status.HTTP_200_OK
+    return followers, 200
 
 
 @app.route('/following', methods=['GET'])
@@ -259,7 +259,7 @@ def followers():
 def following():
     following = Follow.query.filter_by(subject_user_id=current_user.id).all()
 
-    return following, status.HTTP_200_OK
+    return following, 200
 
 
 if __name__ == '__main__':
