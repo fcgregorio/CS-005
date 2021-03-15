@@ -252,7 +252,7 @@ def followers():
     followers_list = []
     for follower in followers:
         followers_list.append(User.query.get(follower.subject_user_id).username)
-    return jsonify(followers), 200
+    return jsonify(followers_list), 200
 
 
 @app.route('/following', methods=['GET'])
@@ -262,8 +262,7 @@ def following():
     followings_list = []
     for following in followings:
         followings_list.append(User.query.get(following.object_user_id).username)
-
-    return jsonify(following), 200
+    return jsonify(followings_list), 200
 
 
 if __name__ == '__main__':
