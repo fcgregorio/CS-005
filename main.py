@@ -248,7 +248,7 @@ def unfollow()
 
 @app.route('/followers', methods=['GET'])
 @login_required
-def followers()
+def followers():
     followers = Follow.query.filter_by(object_user_id=current_user.id).all()
 
     return followers, status.HTTP_200_OK
@@ -256,7 +256,7 @@ def followers()
 
 @app.route('/following', methods=['GET'])
 @login_required
-def following()
+def following():
     following = Follow.query.filter_by(subject_user_id=current_user.id).all()
 
     return following, status.HTTP_200_OK
