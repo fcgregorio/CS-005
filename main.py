@@ -220,7 +220,7 @@ def logout():
 @app.route('/follow', methods=['POST'])
 @login_required
 @csrf.exempt
-def follow()
+def follow():
     form = FollowUnfollowForm(request.form)
     
     if form.validate():
@@ -234,7 +234,7 @@ def follow()
 @app.route('/unfollow', methods=['POST'])
 @login_required
 @csrf.exempt
-def unfollow()
+def unfollow():
     form = FollowUnfollowForm(request.form)
     
     if form.validate():
