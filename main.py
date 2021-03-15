@@ -249,7 +249,9 @@ def unfollow():
 @login_required
 def followers():
     followers = Follow.query.filter_by(object_user_id=current_user.id).all()
-
+    followers_list = []
+    for follower in followers:
+        followers_list.append(User.query.get(follower.subject_user_id).username)
     return jsonify(followers), 200
 
 
