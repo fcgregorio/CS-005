@@ -258,7 +258,10 @@ def followers():
 @app.route('/following', methods=['GET'])
 @login_required
 def following():
-    following = Follow.query.filter_by(subject_user_id=current_user.id).all()
+    followings = Follow.query.filter_by(subject_user_id=current_user.id).all()
+    followings_list = []
+    for following in followings:
+        followings_list.append(User.query.get(following.object_user_id).username)
 
     return jsonify(following), 200
 
