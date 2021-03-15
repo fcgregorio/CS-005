@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, abort
-from forms import LoginForm, MessageForm, RegistrationForm, PasswordChangeForm, UpdateUserForm
+from flask import Flask, render_template, request, redirect, url_for, flash, abort, status
+from forms import LoginForm, MessageForm, RegistrationForm, PasswordChangeForm, UpdateUserForm, FollowUnfollowForm
 from flask_sqlalchemy import SQLAlchemy
 from models import db, User, Message
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
@@ -215,6 +215,51 @@ def password_change():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route('/follow', methods=['POST'])
+@login_required
+@csrf.exempt
+def follow()
+    form = FollowUnfollowForm(request.form)
+    
+    if form.validate():
+        user = User.query.filter_by(username=form.username).first()
+
+        follow = Follow(subject_user_id=current_user.id, object_user_id=user.id)
+        db.session.commit()
+        return None, status.HTTP_201_CREATED
+
+
+@app.route('/unfollow', methods=['POST'])
+@login_required
+@csrf.exempt
+def unfollow()
+    form = FollowUnfollowForm(request.form)
+    
+    if form.validate():
+        user = User.query.filter_by(username=form.username).first()
+        follow = Follow.query.filter_by(subject_user_id=current_user.id, object_user_id=user.id).first()
+        
+        db.session.delete(follow)
+        db.session.commit()
+        return None, status.HTTP_200_OK
+
+
+@app.route('/followers', methods=['GET'])
+@login_required
+def followers()
+    followers = Follow.query.filter_by(object_user_id=current_user.id).all()
+
+    return followers, status.HTTP_200_OK
+
+
+@app.route('/followers', methods=['GET'])
+@login_required
+def followers()
+    following = Follow.query.filter_by(subject_user_id=current_user.id).all()
+
+    return following, status.HTTP_200_OK
 
 
 if __name__ == '__main__':

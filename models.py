@@ -54,3 +54,13 @@ class Message(db.Model):
     def __init__(self, content):
         self.content = content
         self.created_at = datetime.now()
+
+
+class Follow(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    subject_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    object_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    __table_args__ = (
+        db.UniqueConstraint('subject_user_id', 'object_user_id'),
+    )

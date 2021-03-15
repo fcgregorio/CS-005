@@ -1,5 +1,5 @@
 from nltk.corpus import words as nltk_words
-from wtforms import Form, StringField, TextAreaField, PasswordField, validators, ValidationError, HiddenField
+from wtforms import Form, StringField, TextAreaField, PasswordField, IntegerField, validators, ValidationError, HiddenField
 
 
 def check_has_upper_lower_number_special(form, field):
@@ -120,4 +120,11 @@ class MessageForm(Form):
     content = TextAreaField('Content', [
         validators.DataRequired(),
         validators.Length(max=255),
+    ])
+
+
+class FollowUnfollowForm(Form):
+    username = StringField('Username', [
+        validators.DataRequired(),
+        validators.Length(max=25),
     ])
