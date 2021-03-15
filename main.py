@@ -226,6 +226,7 @@ def follow():
         user = User.query.filter_by(username=form.username.data).first()
 
         follow = Follow(subject_user_id=current_user.id, object_user_id=user.id)
+        db.session.add(follow)
         db.session.commit()
         return '', 201
 
