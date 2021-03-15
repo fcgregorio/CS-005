@@ -254,9 +254,9 @@ def followers()
     return followers, status.HTTP_200_OK
 
 
-@app.route('/followers', methods=['GET'])
+@app.route('/following', methods=['GET'])
 @login_required
-def followers()
+def following()
     following = Follow.query.filter_by(subject_user_id=current_user.id).all()
 
     return following, status.HTTP_200_OK
