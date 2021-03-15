@@ -223,7 +223,7 @@ def follow():
     form = FollowUnfollowForm(request.form)
     
     if form.validate():
-        user = User.query.filter_by(username=form.username).first()
+        user = User.query.filter_by(username=form.username.data).first()
 
         follow = Follow(subject_user_id=current_user.id, object_user_id=user.id)
         db.session.commit()
@@ -236,7 +236,7 @@ def unfollow():
     form = FollowUnfollowForm(request.form)
     
     if form.validate():
-        user = User.query.filter_by(username=form.username).first()
+        user = User.query.filter_by(username=form.username.data).first()
         follow = Follow.query.filter_by(subject_user_id=current_user.id, object_user_id=user.id).first()
         
         db.session.delete(follow)
